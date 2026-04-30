@@ -1,0 +1,4 @@
+python-dotenv>=1.0.0
+httpx>=0.28.1
+aiofiles>=24.1.0
+-e ./aicoe-agent-utils[mcp]

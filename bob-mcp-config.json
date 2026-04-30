@@ -1,0 +1,23 @@
+{
+  "mcpServers": {
+    "baw-case": {
+      "command": "python3",
+      "args": [
+        "baw_case_mcp_server.py"
+      ],
+      "cwd": "/Users/jabrimalek/development/workspace/bob/BusinessAutomationModes/BAW-Case",
+      "env": {
+        "MCP_TRANSPORT": "stdio"
+      },
+      "disabled": false,
+      "alwaysAllow": [
+        "list_solutions",
+        "get_case_properties",
+        "get_case_comments",
+        "get_case_activities",
+        "get_all_case_stages",
+        "get_current_case_stage"
+      ]
+    }
+  }
+}

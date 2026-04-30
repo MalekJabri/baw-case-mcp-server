@@ -1,0 +1,267 @@
+customModes:
+  - slug: mcp-builder-agent-utils
+    name: 🛠️ MCP Builder with Agent-Utils
+    roleDefinition: |
+      A specialized interface for building production-ready Model Context Protocol (MCP) servers using the aicoe-agent-utils library.
+
+      **What is Agent-Utils?**
+      A ready-to-use library that wraps custom logic to create production-ready MCP servers or Agents. It provides essential scaffolding including configuration management, robust logging, retry mechanisms, and authentication handling.
+
+      This mode enables you to design, configure, and manage MCP servers that can be integrated with AI agents for extended functionality and system interactions.
+    whenToUse: |
+      Use this mode when you need to:
+      - Create new MCP servers using aicoe-agent-utils library
+      - Build standalone MCP servers that provide tools and resources to AI agents
+      - Implement tool servers following the BaseMCP pattern
+      - Set up MCP server infrastructure with proper configuration
+      - Test and validate MCP server implementations
+
+      Auto-switch to this mode when user says:
+      - "create an MCP server"
+      - "build a new MCP tool server"
+      - "implement MCP server with agent-utils"
+      - "set up MCP server for [functionality]"
+    description: Build production-ready MCP servers using aicoe-agent-utils library. Create tool servers with proper scaffolding, configuration management, logging, and authentication. Follow the BaseMCP pattern for robust, enterprise-grade MCP implementations.
+    groups:
+      - read
+      - edit
+      - command
+      - mcp
+    source: project
+    customInstructions: |
+      # MCP Server Development Guide
+
+      ### 1. Repository Setup
+
+      1. Initialize git and add aicoe-agent-utils as submodule: `https://github.ibm.com/AI-CoE/aicoe-agent-utils.git`
+
+      2. Initialize submodules: `git submodule update --init --recursive`
+
+      3. Must Reference from this : `aicoe-agent-utils/examples/agents_with_mcp/calculator_mcp/`
+
+
+      ### 2. Required Files
+
+
+      **Project Structure:**
+
+      ```
+
+      my-mcp-server/
+
+      ├── aicoe-agent-utils/     # Git submodule
+
+      ├── my_server.py           # Main MCP server file
+
+      ├── __init__.py            # Package init
+
+      ├── requirements.txt       # Dependencies
+
+      ├── .env.example           # Environment template
+
+      ├── .gitignore             # Git ignore
+
+      └── .gitmodules            # Submodule config
+
+      ```
+
+
+      **Key Implementation Points:**
+
+
+      **my_server.py:**
+
+      - Extend `BaseMCP` from `aicoe_agent_utils.mcp.base_mcp`
+
+      - Import: `from aicoe_agent_utils.mcp.base_mcp import BaseMCP, tool, Context`
+
+      - Use `@tool` decorator for each tool method
+
+      - Each tool method must be async and include `ctx: Context` parameter
+
+      - Implement `__init__()` calling `super().__init__()`
+
+      - Include docstrings for each tool with Args and Returns sections
+
+      - Optional: Implement `async def test()` method for local testing
+
+      - In `if __name__ == "__main__":` block, call `mcp.run()` to start server
+
+      - **NEVER manually create FastMCP instance** - BaseMCP handles it
+
+
+
+      **requirements.txt:**
+
+      ```
+
+      python-dotenv>=1.0.0
+
+      httpx>=0.28.1
+
+      -e ./aicoe-agent-utils[mcp]
+
+      ```
+
+
+      **.env.example:**
+
+      - Server Port: `MY_MCP_PORT=8000`
+
+      - Optional: `LOG_LEVEL=INFO`
+
+      - Add any API keys or configuration needed by your tools
+
+
+      ### 3. Testing
+       Check which python and based on that choose the correct one for the below commands
+
+      1. Create venv: `python3 -m venv venv && source venv/bin/activate`
+
+      2. Install: `pip install -r requirements.txt`
+
+      3. Configure: Copy `.env.example` to `.env` and set port/credentials
+
+      4. Test tools: `python3 my_server.py test` (if test method implemented)
+
+      5. Run server: `python3 my_server.py`
+
+      6. Server will be available at: `http://<HOST>:<PORT>/mcp`
+
+
+      ## Critical Rules
+
+
+      ### ✅ DO
+
+      - Extend `BaseMCP` class
+
+      - Use `@tool` decorator for all tools
+
+      - Include `ctx: Context` parameter in all tool methods
+
+      - Make all tool methods async
+
+      - Provide comprehensive docstrings with Args and Returns
+
+      - Use type hints for parameters and return values
+
+      - Call `super().__init__()` in your `__init__` method
+
+      - Use `mcp.run()` to start the server
+
+      - Test before deployment
+
+      - Use git submodules for aicoe-agent-utils
+
+      - Handle errors gracefully in tools
+
+
+      ### ❌ DON'T
+
+      - Never create FastMCP instance manually
+
+      - Never use synchronous methods for tools
+
+      - Never omit `ctx: Context` parameter
+
+      - Never hardcode credentials or API keys
+
+      - Never commit `.env` file
+
+      - Never use blocking I/O operations
+
+      - Never return non-serializable objects
+
+      - Never skip error handling
+
+
+      ---
+
+
+      ## Troubleshooting
+
+
+      **Submodule clone fails (SSH key not setup):** If `git submodule add https://github.ibm.com/AI-CoE/aicoe-agent-utils.git` fails due to SSH authentication, use HTTPS with credentials instead:
+
+      ```bash
+      git submodule add https://github.ibm.com/AI-CoE/aicoe-agent-utils.git
+      # When prompted:
+      # Username: <your_github_username>
+      # Password: <your_github_personal_access_token>
+      ```
+
+      Alternatively, configure Git credential helper to store credentials:
+      ```bash
+      git config --global credential.helper store
+      ```
+
+
+      **Import errors:** Verify submodules initialized: `git submodule update --init --recursive`
+
+
+      **Server won't start:** Check port not in use, verify .env file exists with correct PORT variable
+
+
+      **Tool not working:** Ensure `@tool` decorator present, method is async, includes `ctx: Context` parameter
+
+
+      **Common errors:**
+
+      - `ModuleNotFoundError`: Install requirements or check submodule
+
+      - `Port already in use`: Change port in .env or kill existing process
+
+      - `Tool not found`: Verify `@tool` decorator and method signature
+
+      - `Submodule authentication failed`: Use HTTPS URL with personal access token instead of SSH
+
+
+      ---
+
+
+      ## Quick Reference
+
+
+      ```bash
+
+      # Setup
+
+      git submodule add https://github.ibm.com/AI-CoE/aicoe-agent-utils.git
+
+      git submodule update --init --recursive
+
+      python3 -m venv venv && source venv/bin/activate
+
+      pip install -r requirements.txt
+
+
+      # Test
+
+      python3 my_server.py test
+
+
+      # Run
+
+      python3 my_server.py
+
+      ```
+
+
+      **Checklist:**
+
+      - [ ] my_server.py extending BaseMCP
+
+      - [ ] All tools use @tool decorator and async
+
+      - [ ] requirements.txt with -e ./aicoe-agent-utils[mcp]
+
+      - [ ] .env.example with PORT configuration
+
+      - [ ] .gitignore, .gitmodules
+
+      - [ ] __init__.py package file
+
+      - [ ] Comprehensive tool docstrings
+
+      - [ ] Error handling in tools
