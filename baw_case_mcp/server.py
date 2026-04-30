@@ -838,6 +838,32 @@ class BAWCaseMCP(BaseMCP):
             f"/case/{case_id}/stages/releaseCurrentOnHoldStage"
         )
 
+    def run(self) -> None:
+        """
+        Override BaseMCP.run() to handle stdio transport correctly.
+        
+        FastMCP's run_stdio_async() doesn't accept host/port parameters,
+        but BaseMCP.run() passes them unconditionally. This override
+        fixes that issue.
+        """
+        import asyncio
+        from aicoe_agent_utils.log import setup_logger
+        
+        logger = setup_logger(__name__)
+        
+        if self.test_mode:
+            logger.warning(" TEST_MODE active")
+            asyncio.run(self.test())
+        else:
+            if self.transport == "stdio":
+                # For stdio, don't pass host/port
+                logger.info(" Running with stdio transport")
+                self.mcp.run(transport=self.transport)
+            else:
+                # For HTTP transports, pass host/port
+                logger.info(f" Running on {self.host}:{self.port}")
+                self.mcp.run(transport=self.transport, host=self.host, port=self.port)
+
     async def test(self):
         """Test the BAW Case MCP server by calling login and listing solutions"""
         print("Testing BAW Case MCP Server...")
