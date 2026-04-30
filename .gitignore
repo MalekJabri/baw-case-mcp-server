@@ -49,3 +49,5 @@ htmlcov/
 
 # MCP specific
 *.twp
+.bob/mcp.json
+.bobignore
