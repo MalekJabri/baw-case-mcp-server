@@ -1,13 +1,17 @@
 {
   "mcpServers": {
     "baw-case": {
-      "command": "python3",
+      "command": "uvx",
       "args": [
-        "baw_case_mcp_server.py"
+        "--from",
+        "git+https://github.com/MalekJabri/baw-case-mcp-server",
+        "baw-case-mcp-server"
       ],
-      "cwd": "/Users/jabrimalek/development/workspace/bob/BusinessAutomationModes/BAW-Case",
       "env": {
-        "MCP_TRANSPORT": "stdio"
+        "MCP_TRANSPORT": "stdio",
+        "BAW_BASE_URL": "https://your-baw-server.com/bas/CaseManager/CASEREST/v2",
+        "BAW_USERNAME": "your_username",
+        "BAW_PASSWORD": "your_password"
       },
       "disabled": false,
       "alwaysAllow": [

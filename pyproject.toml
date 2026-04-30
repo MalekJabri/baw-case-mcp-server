@@ -1,0 +1,47 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "baw-case-mcp-server"
+version = "0.1.0"
+description = "MCP Server for IBM Business Automation Workflow Case Management"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [
+    {name = "Malek Jabri", email = "malek.jabri@example.com"}
+]
+keywords = ["mcp", "baw", "ibm", "workflow", "automation", "case-management"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+]
+
+dependencies = [
+    "python-dotenv>=1.0.0",
+    "httpx>=0.28.1",
+    "aiofiles>=24.1.0",
+    "aicoe-agent-utils[mcp] @ git+https://github.ibm.com/AI-CoE/aicoe-agent-utils.git",
+]
+
+[project.urls]
+Homepage = "https://github.com/MalekJabri/baw-case-mcp-server"
+Repository = "https://github.com/MalekJabri/baw-case-mcp-server"
+Issues = "https://github.com/MalekJabri/baw-case-mcp-server/issues"
+
+[project.scripts]
+baw-case-mcp-server = "baw_case_mcp.__main__:main"
+
+[tool.setuptools]
+packages = ["baw_case_mcp"]
+py-modules = []
+
+[tool.setuptools.package-data]
+baw_case_mcp = ["*.json"]
